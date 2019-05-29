@@ -90,32 +90,87 @@ public class ArbolBinarioBusqueda<E extends Comparable<E>> extends Arbol<E> {
 
 	@Override
 	public boolean contiene(E unValor) {
-		// TODO 1.a
-		return false;
+		// --HECHO-- TODO 1.a
+		boolean bandera= false;
+		if(this.valor== unValor) bandera=true;
+		else {
+			
+			if(this.izquierdo().contiene(unValor)) bandera=true;
+			else if(this.derecho().contiene(unValor))bandera=true;
+		}
+		return bandera;
 	}
 
 	@Override
 	public int profundidad() {
-		// TODO 1.b
-		return 0;
+		// --HECHO-- TODO 1.b
+		
+		int alturaI, alturaD,profundidad;
+		if(this.esVacio()) profundidad=0;
+		else{
+		alturaI=1+ this.izquierdo().profundidad();
+		alturaD=1+ this.derecho().profundidad(); 
+		
+		if(alturaI>alturaD) profundidad= alturaI;
+		else if(alturaI==alturaD) profundidad=alturaI;
+		else profundidad = alturaD;
+		}
+		return profundidad;
 	}
 
 	@Override
 	public int cuentaNodosDeNivel(int nivel) {
-		// TODO 1.c
-		return 0;
+		// ---hecho-- TODO 1.c
+		int retorno;
+		
+		if( nivel== 0 ) retorno=1;
+		else {
+			if(this.derecho()==null && this.izquierdo==null )
+			    retorno=0;
+			else if(this.derecho()==null && this.izquierdo!=null)
+				retorno= this.izquierdo().cuentaNodosDeNivel(nivel-1);
+			else if(this.derecho()!=null && this.izquierdo==null)
+				retorno= this.derecho().cuentaNodosDeNivel(nivel-1);
+			else	
+			retorno=this.derecho().cuentaNodosDeNivel(nivel-1)+this.izquierdo().cuentaNodosDeNivel(nivel-1);
+		}
+		
+		return retorno;
 	}
 
 	@Override
 	public boolean esCompleto() {
-		// TODO 1.d
-		return false;
+		// --hecho-- TODO 1.d
+		boolean retorno=false;
+	
+		if (this.derecho==null){
+			retorno=true;
+		}
+		else if(this.derecho.esVacio() &&(this.izquierdo().esVacio() || this.izquierdo().esCompleto())){
+			retorno=true;
+		}
+		else{
+			this.izquierdo().esCompleto();
+			this.derecho().esCompleto();
+		}
+		
+		
+		return retorno;
 	}
 
 	@Override
 	public boolean esLleno() {
-		// TODO 1.e
-		return false;
+		//--hecho-- TODO 1.e
+		boolean retorno=true;
+		int nivelHojas= this.profundidad();
+		
+		for(int i=0; i<nivelHojas && retorno;i++){
+			if (2 == this.derecho().cuentaNodosDeNivel(i) && 2 == this.izquierdo().cuentaNodosDeNivel(i))
+            retorno=true;	
+			else retorno=false;
+		}
+		
+		return retorno;
 	}
 
 }
